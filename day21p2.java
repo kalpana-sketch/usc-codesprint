@@ -1,44 +1,53 @@
 import java.util.*;
 
 public class day21p2 {
-    public static int[] deckRevealedIncreasing(int[] deck) {
-        Arrays.sort(deck);
-        Deque<Integer> deque = new ArrayDeque<>();
 
-        for (int i = deck.length - 1; i >= 0; i--) {
-            if (!deque.isEmpty()) {
-                deque.addFirst(deque.removeLast());
-            }
-            deque.addFirst(deck[i]);
+    public static int[] deckRevealedIncreasing(int[] input) {
+        int n = input.length;
+        Arrays.sort(input);
+
+        Queue<Integer> indexQueue = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            indexQueue.add(i);
         }
 
-        int[] result = new int[deck.length];
-        int idx = 0;
-        for (int num : deque) {
-            result[idx++] = num;
+        int[] result = new int[n];
+        for (int card : input) {
+            int index = indexQueue.poll();
+            result[index] = card;
+
+            if (!indexQueue.isEmpty()) {
+                indexQueue.add(indexQueue.poll());
+            }
         }
 
         return result;
     }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter number of cards:");
-        int n = sc.nextInt();
+        int n = scanner.nextInt();
 
         int[] deck = new int[n];
         System.out.println("Enter the card values:");
         for (int i = 0; i < n; i++) {
-            deck[i] = sc.nextInt();
+            deck[i] = scanner.nextInt();
         }
 
-        int[] result = deckRevealedIncreasing(deck);
+        int[] initialOrder = deckRevealedIncreasing(deck);
 
         System.out.println("Initial deck order to reveal in increasing order:");
-        for (int val : result) {
-            System.out.print(val + " ");
+        for (int i = 0; i < initialOrder.length; i++) {
+            System.out.print(initialOrder[i]);
+            if (i < initialOrder.length - 1) System.out.print(", ");
         }
-        sc.close();
+        System.out.println();
+
+        scanner.close();
     }
 }
+
+
+
