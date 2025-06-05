@@ -1,26 +1,22 @@
 import java.util.*;
 
 public class day21p2 {
+    public static int[] deckRevealedIncreasing(int[] deck) {
+        Deque<Integer> deque = new ArrayDeque<>();
 
-    public static int[] deckRevealedIncreasing(int[] input) {
-        int n = input.length;
-        Arrays.sort(input);
-
-        Queue<Integer> indexQueue = new LinkedList<>();
-        for (int i = 0; i < n; i++) {
-            indexQueue.add(i);
-        }
-
-        int[] result = new int[n];
-        for (int card : input) {
-            int index = indexQueue.poll();
-            result[index] = card;
-
-            if (!indexQueue.isEmpty()) {
-                indexQueue.add(indexQueue.poll());
+        for (int i = deck.length - 1; i >= 0; i--) {
+            if (!deque.isEmpty()) {
+                deque.addFirst(deque.removeLast());
             }
+            deque.addFirst(deck[i]);
         }
 
+        int[] result = new int[deck.length];
+        int idx = 0;
+        for (int num : deque) {
+            result[idx++] = num;
+        }
+        Arrays.sort(result);
         return result;
     }
 
@@ -36,18 +32,12 @@ public class day21p2 {
             deck[i] = scanner.nextInt();
         }
 
-        int[] initialOrder = deckRevealedIncreasing(deck);
+        int[] result = deckRevealedIncreasing(deck);
 
         System.out.println("Initial deck order to reveal in increasing order:");
-        for (int i = 0; i < initialOrder.length; i++) {
-            System.out.print(initialOrder[i]);
-            if (i < initialOrder.length - 1) System.out.print(", ");
+        for (int val : result) {
+            System.out.print(val + " ");
         }
-        System.out.println();
-
         scanner.close();
     }
 }
-
-
-
